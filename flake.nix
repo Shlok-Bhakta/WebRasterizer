@@ -41,7 +41,7 @@
           # GOOS = "js";
           # GOARCH = "wasm";
           shellHook = ''
-            echo "Resume ATS Optimization environment ready."
+            echo "You show those triangles who's boss!"
             zsh
             alias build='GOOS=js GOARCH=wasm go build -o main.wasm'
           '';

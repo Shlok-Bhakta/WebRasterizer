@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"syscall/js"
 )
 
@@ -17,6 +18,7 @@ type pixel struct {
 type canvas struct {
 	width     int
 	height    int
+	scale     uint8
 	pixels    [][]pixel
 	imagedata js.Value
 	ctx       js.Value
@@ -26,21 +28,16 @@ type canvas struct {
 func (c *canvas) init() {
 	c.element = js.Global().Get("document").Call("getElementById", "canvas")
 	c.ctx = js.Global().Get("document").Call("getElementById", "canvas").Call("getContext", "2d")
-	c.width = c.ctx.Get("canvas").Get("width").Int()
-	c.height = c.ctx.Get("canvas").Get("height").Int()
+	c.scale = 4 // Set the scale factor for the canvas
 	c.setSizeFromDocument()
 	// c.setSize(700, 500)
 	// Setup resize listener
 	js.Global().Call("addEventListener", "resize", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+
 		c.setSizeFromDocument()
 		c.render()
 		return nil
 	}))
-	c.imagedata = c.ctx.Call("createImageData", js.ValueOf(c.width), js.ValueOf(c.height))
-	c.pixels = make([][]pixel, c.height)
-	for i := range c.pixels {
-		c.pixels[i] = make([]pixel, c.width)
-	}
 }
 
 func (c *canvas) setSize(w int, h int) {
@@ -51,14 +48,33 @@ func (c *canvas) setSize(w int, h int) {
 }
 
 func (c *canvas) setSizeFromDocument() {
-	resolution := 4
-	c.width = js.Global().Get("window").Get("innerWidth").Int() / resolution
-	c.height = js.Global().Get("window").Get("innerHeight").Int() / resolution
+	c.width = js.Global().Get("window").Get("innerWidth").Int() / int(c.scale)
+	c.height = js.Global().Get("window").Get("innerHeight").Int() / int(c.scale)
+	c.imagedata = c.ctx.Call("createImageData", js.ValueOf(c.width), js.ValueOf(c.height))
+	if c.pixels == nil {
+		c.pixels = make([][]pixel, c.height)
+		for i := range c.pixels {
+			c.pixels[i] = make([]pixel, c.width)
+		}
+	} else {
+		newpixels := make([][]pixel, c.height)
+		for i := range newpixels {
+			newpixels[i] = make([]pixel, c.width)
+		}
+		for i := 0; i < c.height; i++ {
+			for j := 0; j < c.width; j++ {
+				newpixels[i][j] = c.pixels[i][j]
+			}
+		}
+		c.pixels = newpixels
+	}
+	fmt.Printf("Setting canvas size to %d x %d\n", c.width, c.height)
 	c.setSize(c.width, c.height)
 }
 
 func (c *canvas) render() {
 	data := make([]uint8, c.width*c.height*4)
+	fmt.Printf("Rendering canvas with width: %d, height: %d, scale: %d\n", c.width, c.height, c.scale)
 	// loop over width and height pixels and add them to the imagedata array
 	totalPixels := c.width * c.height
 	for i := 0; i < totalPixels; i++ {
