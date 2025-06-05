@@ -3,20 +3,20 @@
 
 package main
 
-import (
-	"math/rand"
-)
-
 func main() {
 	canvasdata := canvas{}
 	canvasdata.init()
 	// set all pixels to red
 	for i := 0; i < canvasdata.height; i++ {
 		for j := 0; j < canvasdata.width; j++ {
-			randred := rand.Intn(256)
-			randgreen := rand.Intn(256)
-			randblue := rand.Intn(256)
-			canvasdata.pixels[i][j] = pixel{red: uint8(randred), green: uint8(randgreen), blue: uint8(randblue), alpha: 255}
+			canvasdata.pixels[i][j] = pixel{red: 255, green: 255, blue: 200, alpha: 255}
+		}
+	}
+
+	// draw a square
+	for i := canvasdata.mapHeight(0.1); i < canvasdata.mapHeight(0.5); i++ {
+		for j := canvasdata.mapWidth(0.3); j < canvasdata.mapWidth(0.5); j++ {
+			canvasdata.pixels[i][j] = pixel{red: 0, green: 255, blue: 0, alpha: 255}
 		}
 	}
 	canvasdata.render()

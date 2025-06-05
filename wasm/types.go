@@ -87,3 +87,25 @@ func (c *canvas) render() {
 	js.CopyBytesToJS(c.imagedata.Get("data"), data)
 	c.ctx.Call("putImageData", c.imagedata, 0, 0)
 }
+
+// takes a number from 0 to 1 and maps it to the width of the canvas
+func (c *canvas) mapWidth(x float64) int {
+	if x < 0 {
+		x = 0
+	}
+	if x > 1 {
+		x = 1
+	}
+	return int(float64(c.width) * x)
+}
+
+// takes a number from 0 to 1 and maps it to the height of the canvas
+func (c *canvas) mapHeight(y float64) int {
+	if y < 0 {
+		y = 0
+	}
+	if y > 1 {
+		y = 1
+	}
+	return int(float64(c.height) * y)
+}
