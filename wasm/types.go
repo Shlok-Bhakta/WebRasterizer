@@ -96,7 +96,14 @@ func (c *canvas) mapWidth(x float64) int {
 	if x > 1 {
 		x = 1
 	}
-	return int(float64(c.width) * x)
+	portion := int(float64(c.width) * x)
+	if portion < 0 {
+		portion = 0
+	}
+	if portion > c.width {
+		portion = c.width
+	}
+	return portion
 }
 
 // takes a number from 0 to 1 and maps it to the height of the canvas
@@ -107,5 +114,12 @@ func (c *canvas) mapHeight(y float64) int {
 	if y > 1 {
 		y = 1
 	}
-	return int(float64(c.height) * y)
+	portion := int(float64(c.height) * y)
+	if portion < 0 {
+		portion = 0
+	}
+	if portion > c.height {
+		portion = c.height
+	}
+	return portion
 }

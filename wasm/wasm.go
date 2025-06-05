@@ -14,8 +14,8 @@ func main() {
 	}
 
 	// draw a square
-	for i := canvasdata.mapHeight(0.1); i < canvasdata.mapHeight(0.5); i++ {
-		for j := canvasdata.mapWidth(0.3); j < canvasdata.mapWidth(0.5); j++ {
+	for i := canvasdata.mapHeight(0); i < canvasdata.mapHeight(1); i++ {
+		for j := canvasdata.mapWidth(0); j < canvasdata.mapWidth(1); j++ {
 			canvasdata.pixels[i][j] = pixel{red: 0, green: 255, blue: 0, alpha: 255}
 		}
 	}
