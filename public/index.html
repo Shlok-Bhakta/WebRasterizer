@@ -6,7 +6,21 @@
     <title>Web Renderer</title>
 </head>
 <body>
-
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+            background: black; /* Ensure no white shows */
+        }
+        canvas { 
+            display: block; 
+            width: 100vw;  /* Full viewport width */
+            height: 100vh; /* Full viewport height */
+            image-rendering: pixelated; /* Optional: crisp pixels instead of blur */
+            /* OR use: image-rendering: auto; for smooth scaling */
+        }
+    </style>
     <script src="wasm_exec.js"></script>
     <script>
         const go = new Go();
