@@ -75,7 +75,7 @@ func (c *canvas) render() {
 		data[postition+0] = c.pixels[i/c.width][i%c.width].red
 		data[postition+1] = c.pixels[i/c.width][i%c.width].green
 		data[postition+2] = c.pixels[i/c.width][i%c.width].blue
-		data[postition+3] = c.pixels[i/c.width][i%c.width].alpha
+		data[postition+3] = 255
 	}
 	js.CopyBytesToJS(c.imagedata.Get("data"), data)
 	c.ctx.Call("putImageData", c.imagedata, 0, 0)
