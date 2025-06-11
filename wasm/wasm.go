@@ -42,13 +42,13 @@ func main() {
 	// draw a triangle
 	triangles := make([]triangle, 0)
 	vectors := make([]screen_point, 0)
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 100; i++ {
 		// create a random triangle
 		t := triangle{
 			points: [3]point{
-				{x: 5, y: 10},
-				{x: 30, y: 40},
-				{x: 5, y: 80},
+				{x: 5 + r.Float64()*10, y: 5 + r.Float64()*10},
+				{x: 30 + r.Float64()*10, y: 5 + r.Float64()*10},
+				{x: 5 + r.Float64()*10, y: 30 + r.Float64()*10},
 			},
 			color: make_random_pixel(),
 		}
