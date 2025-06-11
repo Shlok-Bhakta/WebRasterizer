@@ -9,7 +9,11 @@ import (
 	"time"
 )
 
-func check_triange(triangle *triangle, vector *screen_point, canvasdata *canvas) {
+func check_triangle(triangle *triangle, vector *screen_point, canvasdata *canvas) {
+	// add a random rotation to the triangle
+	t_center := triangle.get_center()
+	triangle.rotate(rand.Float64()*0.1, &t_center)
+
 	// update the triangle position
 	for i := 0; i < 3; i++ {
 		triangle.points[i].x += float64(vector.x)
@@ -33,7 +37,7 @@ func check_triange(triangle *triangle, vector *screen_point, canvasdata *canvas)
 func main() {
 	canvasdata := canvas{}
 	canvasdata.init()
-	r := rand.New(rand.NewSource(50))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	// gonna move the triangle by this value in the direction
 	// draw a triangle
 	triangles := make([]triangle, 0)
@@ -65,8 +69,6 @@ func main() {
 			}
 		}
 
-		// print the triangle points
-		// fmt.Printf("Triangle points: %+v\n", triangle)
 		// draw the triangles
 		for k := 0; k < len(triangles); k++ {
 			for i := 0; i < canvasdata.height; i++ {
@@ -80,7 +82,7 @@ func main() {
 		canvasdata.render()
 
 		for k := 0; k < len(triangles); k++ {
-			check_triange(&triangles[k], &vectors[k], &canvasdata)
+			check_triangle(&triangles[k], &vectors[k], &canvasdata)
 		}
 		// just sleep for a bit
 		time.Sleep(time.Millisecond * 100)

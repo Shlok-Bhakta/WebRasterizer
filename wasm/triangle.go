@@ -33,3 +33,19 @@ func (t *triangle) area() float64 {
 	d3 := t.points[2].x*t.points[0].y - t.points[0].x*t.points[2].y
 	return math.Abs(float64((d1 + d2 + d3) / 2))
 }
+
+func (t *triangle) rotate(angle float64, pivot *point) {
+	// rotate each point of the triangle around the pivot
+	for i := 0; i < 3; i++ {
+		t.points[i].rotate(angle, pivot)
+	}
+}
+
+func (t *triangle) get_center() point {
+	// get the center of the triangle
+	center := point{
+		x: (t.points[0].x + t.points[1].x + t.points[2].x) / 3,
+		y: (t.points[0].y + t.points[1].y + t.points[2].y) / 3,
+	}
+	return center
+}
