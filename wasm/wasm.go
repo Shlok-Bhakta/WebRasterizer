@@ -9,19 +9,21 @@ import (
 	"time"
 )
 
-func check_triange(triangle *triangle, vector *point, canvasdata *canvas) {
+func check_triange(triangle *triangle, vector *screen_point, canvasdata *canvas) {
 	// update the triangle position
 	for i := 0; i < 3; i++ {
-		triangle.points[i].x += vector.x
-		triangle.points[i].y += vector.y
+		triangle.points[i].x += float64(vector.x)
+		triangle.points[i].y += float64(vector.y)
 	}
+
 	for i := 0; i < 3; i++ {
+		screen_point := triangle.points[i].toScreen(canvasdata)
 		// if the triangle goes out of bounds, reverse the vector
-		if triangle.points[i].x < 0 || triangle.points[i].x >= canvasdata.width {
+		if screen_point.x < 0 || screen_point.x >= canvasdata.width {
 			// reverse the vector
 			vector.x = -1 * vector.x
 		}
-		if triangle.points[i].y < 0 || triangle.points[i].y >= canvasdata.height {
+		if screen_point.y < 0 || screen_point.y >= canvasdata.height {
 			// reverse the vector
 			vector.y = -1 * vector.y
 		}
@@ -35,7 +37,7 @@ func main() {
 	// gonna move the triangle by this value in the direction
 	// draw a triangle
 	triangles := make([]triangle, 0)
-	vectors := make([]point, 0)
+	vectors := make([]screen_point, 0)
 	for i := 0; i < 10; i++ {
 		// create a random triangle
 		t := triangle{
@@ -48,7 +50,7 @@ func main() {
 		}
 		triangles = append(triangles, t)
 		// create a random vector
-		v := point{
+		v := screen_point{
 			x: canvasdata.mapWidth(r.Float64() / 20),
 			y: canvasdata.mapHeight(r.Float64() / 20),
 		}
@@ -69,7 +71,7 @@ func main() {
 		for k := 0; k < len(triangles); k++ {
 			for i := 0; i < canvasdata.height; i++ {
 				for j := 0; j < canvasdata.width; j++ {
-					if triangles[k].is_inside(point{x: j, y: i}) {
+					if triangles[k].is_inside(point{x: float64(j), y: float64(i)}) {
 						canvasdata.pixels[i][j] = triangles[k].color
 					}
 				}
