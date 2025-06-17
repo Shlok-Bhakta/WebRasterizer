@@ -26,7 +26,10 @@
         buildScript = pkgs.writeShellScriptBin "build" ''
           GOOS=js GOARCH=wasm go build -o main.wasm
         '';
-
+        deploy = pkgs.writeShellScriptBin "deploy" ''
+          echo "copying public to docs"
+          cp -r ./public/* ./docs/
+        '';
       in
       {
         devShells.default = pkgs.mkShell {
@@ -37,6 +40,7 @@
             # Live reload in go
             air
             buildScript
+            deploy
           ];
           # GOOS = "js";
           # GOARCH = "wasm";
