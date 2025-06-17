@@ -5,33 +5,26 @@ package main
 
 import "math"
 
-type point struct {
-	x float64
-	y float64
+type point3d struct {
+	x, y, z float64
 }
+
+// type point2d struct {
+// 	x, y float64
+// }
 
 type screen_point struct {
-	x int
-	y int
+	x, y int
 }
 
-func (p *point) toScreen(canvas *canvas) screen_point {
-	// convert the point to screen coordinates
-	screen_p := screen_point{
-		x: int(p.x),
-		y: int(p.y),
-	}
-	return screen_p
-}
-
-func (p *point) distance(other point) float64 {
+func (p *point3d) distance(other point3d) float64 {
 	dx := p.x - other.x
 	dy := p.y - other.y
 	return float64(dx*dx + dy*dy)
 }
 
 // rotate rotates the point around a pivot by a given angle in radians.
-func (p *point) rotate(angle float64, pivot *point) {
+func (p *point3d) rotate(angle float64, pivot *point3d) {
 	sin := math.Sin(angle)
 	cos := math.Cos(angle)
 
