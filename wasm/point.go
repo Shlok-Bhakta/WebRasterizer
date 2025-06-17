@@ -38,3 +38,11 @@ func (p *point3d) rotate(angle float64, pivot *point3d) {
 	p.x = newx + pivot.x
 	p.y = newy + pivot.y
 }
+
+func (p *point3d) transform(matrix *matrix4x4) point3d {
+	return point3d{
+		x: matrix[0][0]*p.x + matrix[0][1]*p.y + matrix[0][2]*p.z + matrix[0][3],
+		y: matrix[1][0]*p.x + matrix[1][1]*p.y + matrix[1][2]*p.z + matrix[1][3],
+		z: matrix[2][0]*p.x + matrix[2][1]*p.y + matrix[2][2]*p.z + matrix[2][3],
+	}
+}

@@ -44,6 +44,10 @@ func (t *triangle) draw(canvasdata *canvas) {
 	// draw these points to the canvas using the color and the bounding box
 	for x := top_left.x; x <= bottom_right.x; x++ {
 		for y := top_left.y; y <= bottom_right.y; y++ {
+			// check if point is outsede the screen, if so do nothing
+			if x < 0 || x >= canvasdata.width || y < 0 || y >= canvasdata.height {
+				continue
+			}
 			p := screen_point{x: x, y: y}
 			if screen_triangle.is_inside(p) {
 				canvasdata.pixels[p.x][p.y] = screen_triangle.color
@@ -52,10 +56,50 @@ func (t *triangle) draw(canvasdata *canvas) {
 	}
 }
 
-func (t *triangle) rotate(angle float64, pivot *point3d) {
-	// rotate each point of the triangle around the pivot
+// roll rotates the triangle around a pivot point
+func (t *triangle) transform(roll float64, pitch float64, yaw float64, pivot *point3d) {
+	// construct a transformation matrix for the roll, pitch, and yaw
+	roll_matrix := matrix4x4{
+		{1, 0, 0, 0},
+		{0, math.Cos(roll), -math.Sin(roll), 0},
+		{0, math.Sin(roll), math.Cos(roll), 0},
+		{0, 0, 0, 1},
+	}
+	pitch_matrix := matrix4x4{
+		{math.Cos(pitch), 0, -math.Sin(pitch), 0},
+		{0, 1, 0, 0},
+		{math.Sin(pitch), 0, math.Cos(pitch), 0},
+		{0, 0, 0, 1},
+	}
+	yaw_matrix := matrix4x4{
+		{math.Cos(yaw), -math.Sin(yaw), 0, 0},
+		{math.Sin(yaw), math.Cos(yaw), 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1},
+	}
+
+	// multiply the transformation matrices together
+	matrix := yaw_matrix.multiply(&pitch_matrix)
+	matrix = matrix.multiply(&roll_matrix)
+
+	// apply the transformation matrix to the triangle points with pivot
 	for i := 0; i < 3; i++ {
-		t.points[i].rotate(angle, pivot)
+		// Translate to origin (subtract pivot)
+		translated := point3d{
+			x: t.points[i].x - pivot.x,
+			y: t.points[i].y - pivot.y,
+			z: t.points[i].z - pivot.z,
+		}
+
+		// Apply rotation
+		rotated := translated.transform(&matrix)
+
+		// Translate back (add pivot)
+		t.points[i] = point3d{
+			x: rotated.x + pivot.x,
+			y: rotated.y + pivot.y,
+			z: rotated.z + pivot.z,
+		}
 	}
 }
 
@@ -64,6 +108,7 @@ func (t *triangle) get_center() point3d {
 	center := point3d{
 		x: (t.points[0].x + t.points[1].x + t.points[2].x) / 3,
 		y: (t.points[0].y + t.points[1].y + t.points[2].y) / 3,
+		z: (t.points[0].z + t.points[1].z + t.points[2].z) / 3,
 	}
 	return center
 }

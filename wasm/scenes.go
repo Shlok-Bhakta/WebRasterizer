@@ -14,9 +14,9 @@ func triangle3d() {
 	// draw a triangle
 	t := triangle{
 		points: [3]point3d{
-			{x: 5, y: 5, z: 0},
-			{x: 30, y: 5, z: 0},
-			{x: 5, y: 30, z: 10},
+			{x: 50 * 3, y: 5 * 3, z: 0},
+			{x: 30 * 3, y: 5 * 3, z: 0},
+			{x: 5 * 3, y: 30 * 3, z: 10},
 		},
 		color: make_random_pixel(),
 	}
@@ -27,6 +27,8 @@ func triangle3d() {
 			}
 		}
 		t.draw(&canvasdata)
+		t_center := t.get_center()
+		t.transform(0.1, 0.00, 0.00, &t_center)
 		canvasdata.render()
 		time.Sleep(time.Millisecond * 100)
 	}
