@@ -23,7 +23,19 @@
     <script src="wasm_exec.js"></script>
     <script>
         const go = new Go();
-        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+        WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then(async (result) => {
+            let allObjects = [];
+            
+            // fetch cube data
+            const objResponse = await fetch("cube.obj");
+            const objData = await objResponse.text();
+
+            allObjects.push(objData);
+
+
+            // make the allObjects array available to go
+            window.allObjects = allObjects;
+
             go.run(result.instance);
         });
     </script>
