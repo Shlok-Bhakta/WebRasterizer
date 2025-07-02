@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -12,20 +13,29 @@ type triangle struct {
 	color  pixel
 }
 
-func (t *triangle) draw(canvasdata *canvas) {
-	// flatten triangle
-	flat_t := [3]point3d{
-		{x: t.points[0].x, y: t.points[0].y, z: 0},
-		{x: t.points[1].x, y: t.points[1].y, z: 0},
-		{x: t.points[2].x, y: t.points[2].y, z: 0},
-	}
-	// convert the flattened triangle to screenspace
+func (t *triangle) draw(canvasdata *canvas, cam *camera) {
 	// draw the triangle on the canvas
+	project_1, err := cam.project_point(t.points[0], canvasdata)
+	if err != nil {
+		fmt.Printf("Error projecting triangle point 1: %v\n", err)
+		return
+	}
+	project_2, err := cam.project_point(t.points[1], canvasdata)
+	if err != nil {
+		fmt.Printf("Error projecting triangle point 2: %v\n", err)
+		return
+	}
+	project_3, err := cam.project_point(t.points[2], canvasdata)
+	if err != nil {
+		fmt.Printf("Error projecting triangle point 3: %v\n", err)
+		return
+	}
+
 	screen_triangle := screen_triangle{
 		points: [3]screen_point{
-			{x: int(flat_t[0].x), y: int(flat_t[0].y)},
-			{x: int(flat_t[1].x), y: int(flat_t[1].y)},
-			{x: int(flat_t[2].x), y: int(flat_t[2].y)},
+			project_1,
+			project_2,
+			project_3,
 		},
 		color: t.color,
 	}
@@ -50,7 +60,7 @@ func (t *triangle) draw(canvasdata *canvas) {
 			}
 			p := screen_point{x: x, y: y}
 			if screen_triangle.is_inside(p) {
-				canvasdata.pixels[p.x][p.y] = screen_triangle.color
+				canvasdata.pixels[p.y][p.x] = screen_triangle.color
 			}
 		}
 	}

@@ -3,6 +3,8 @@
 
 package main
 
+// import "math"
+
 type matrix4x4 [4][4]float64
 
 func (m *matrix4x4) multiply(o *matrix4x4) matrix4x4 {
@@ -31,5 +33,31 @@ func (m *matrix4x4) multiply(o *matrix4x4) matrix4x4 {
 			m[3][0]*o[0][2] + m[3][1]*o[1][2] + m[3][2]*o[2][2] + m[3][3]*o[3][2],
 			m[3][0]*o[0][3] + m[3][1]*o[1][3] + m[3][2]*o[2][3] + m[3][3]*o[3][3],
 		},
+	}
+}
+
+// Bit of a hack, but it works when scale is uniform
+func (m *matrix4x4) inverse() matrix4x4 {
+	return matrix4x4{
+		{m[0][0], m[1][0], m[2][0], -(m[0][0]*m[0][3] + m[1][0]*m[1][3] + m[2][0]*m[2][3])},
+		{m[0][1], m[1][1], m[2][1], -(m[0][1]*m[0][3] + m[1][1]*m[1][3] + m[2][1]*m[2][3])},
+		{m[0][2], m[1][2], m[2][2], -(m[0][2]*m[0][3] + m[1][2]*m[1][3] + m[2][2]*m[2][3])},
+		{0, 0, 0, 1},
+	}
+}
+
+// sets the position of the matrix to the given point
+func (m *matrix4x4) translate(p *point3d) {
+	m[0][3] = p.x
+	m[1][3] = p.y
+	m[2][3] = p.z
+}
+
+func identity() matrix4x4 {
+	return matrix4x4{
+		{1, 0, 0, 0},
+		{0, 1, 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1},
 	}
 }
