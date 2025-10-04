@@ -32,12 +32,39 @@
 
             allObjects.push(objData);
 
-
             // make the allObjects array available to go
             window.allObjects = allObjects;
 
             go.run(result.instance);
         });
+
+        let hotReloadEnabled = true;
+        let consecutiveErrors = 0;
+        let intervalId = null;
+
+        function checkForReload(){
+            if (!hotReloadEnabled) return;
+            fetch("/health").then(resp => {
+                consecutiveErrors = 0
+                if(resp.ok && resp.status === 200){
+                    console.log("RELOAD!")
+                    window.location.reload()
+                }
+            }).catch(err => {
+                consecutiveErrors++;
+                console.log("Server didnt respond?")
+                if (consecutiveErrors>=3){
+                    console.log("Disabling Reloading (Server prolly dead or you are in prod 🥳)")
+                    hotReloadEnabled = false;
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+            })
+        }
+
+        intervalId = setInterval(checkForReload, 1000)
+        console.log("hot reload enabled")
+
     </script>
     <canvas id="canvas"></canvas>
 </body>

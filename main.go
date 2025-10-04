@@ -1,10 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
+
+var shouldReload = true
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	if shouldReload {
+		shouldReload = false
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("reload"))
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	// read the file from the header and find it in the public folder
@@ -39,6 +53,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	colorReset := "\033[0m"
+	colorRed := "\033[31m"
+	colorGreen := "\033[1;32m"
+	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := 8080
+	fmt.Println(colorGreen + "Starting server! port: " + strconv.Itoa(port))
+	err := http.ListenAndServe(":"+strconv.Itoa(port), nil)
+	for err != nil {
+		fmt.Println(colorRed + "Failed to bind port: " + strconv.Itoa(port) + colorReset)
+		port += 1
+		fmt.Println(colorGreen + "Starting server! port: " + strconv.Itoa(port))
+		err = http.ListenAndServe(":"+strconv.Itoa(port), nil)
+	}
 }
