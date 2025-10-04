@@ -61,11 +61,7 @@ func cube() {
 	// 	color: make_random_pixel(),
 	// }
 	for {
-		for i := 0; i < canvasdata.height; i++ {
-			for j := 0; j < canvasdata.width; j++ {
-				canvasdata.pixels[i][j] = pixel{red: 255, green: 255, blue: 200}
-			}
-		}
+		canvasdata.setBackground(pixel{red: 255, green: 255, blue: 200})
 		mesh_data.draw(&canvasdata, &cam)
 		// Rotate the mesh around its center
 		center := mesh_data.get_center()

@@ -65,6 +65,14 @@ func (c *canvas) setSizeFromDocument() {
 	c.setSize(c.width, c.height)
 }
 
+func (c *canvas) setBackground(p pixel) {
+	for i := 0; i < c.height; i++ {
+		for j := 0; j < c.width; j++ {
+			c.pixels[i][j] = p
+		}
+	}
+}
+
 func (c *canvas) render() {
 	data := make([]uint8, c.width*c.height*4)
 	fmt.Printf("Rendering canvas with width: %d, height: %d, scale: %d\n", c.width, c.height, c.scale)
