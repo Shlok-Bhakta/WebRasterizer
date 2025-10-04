@@ -5,7 +5,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"time"
 )
 
@@ -41,13 +40,12 @@ func cube() {
 	canvasdata := canvas{}
 	canvasdata.init()
 	cam_transform_matrix := identity()
-	translation := point3d{x: 0, y: 0, z: -3}
-	cam_transform_matrix.translate(&translation)
-	cam := camera{
-		transform: cam_transform_matrix,
-		fov:       600 * (math.Pi / 180.0),
-	}
-
+	translation := point3d{x: 0, y: 0, z: -2}
+	// runtime_translation := point3d{x: 0, y: 0, z: 0.01}
+	cam_transform_matrix.set_position(&translation)
+	cam := camera{}
+	cam.set_transform(cam_transform_matrix)
+	cam.set_fov(6000)
 	// Load the cube from OBJ file
 	mesh_data := parse_obj()
 	fmt.Printf("Loaded mesh with %d triangles & mesh data %v\n", len(mesh_data.triangles), mesh_data)
@@ -60,13 +58,20 @@ func cube() {
 	// 	},
 	// 	color: make_random_pixel(),
 	// }
+	// var i float64 = 600
 	for {
-		canvasdata.setBackground(pixel{red: 255, green: 255, blue: 200})
+		canvasdata.set_background(pixel{red: 255, green: 255, blue: 200})
 		mesh_data.draw(&canvasdata, &cam)
+		// cam.set_fov(i)
+		// i += 10
+		// cam_transform_matrix.translate(&runtime_translation)
+		// cam.set_transform(cam_transform_matrix)
+		fmt.Println(cam.transform)
+		// triangle.draw(&canvasdata, &cam)
 		// Rotate the mesh around its center
-		center := mesh_data.get_center()
+		// center := mesh_data.get_center()
 		// fmt.Printf("Center of mesh: %v\n", center)
-		mesh_data.transform(0.01, 0.01, 0.01, &center)
+		// mesh_data.transform(0.01, 0.01, 0.01, &center)
 		// Render the canvas
 		canvasdata.render()
 		time.Sleep(100 * time.Millisecond)

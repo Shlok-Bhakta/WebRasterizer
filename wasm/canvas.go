@@ -22,25 +22,25 @@ func (c *canvas) init() {
 	c.element = js.Global().Get("document").Call("getElementById", "canvas")
 	c.ctx = js.Global().Get("document").Call("getElementById", "canvas").Call("getContext", "2d")
 	c.scale = 4 // Set the scale factor for the canvas
-	c.setSizeFromDocument()
+	c.set_size_from_document()
 	// c.setSize(700, 500)
 	// Setup resize listener
 	js.Global().Call("addEventListener", "resize", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 
-		c.setSizeFromDocument()
+		c.set_size_from_document()
 		c.render()
 		return nil
 	}))
 }
 
-func (c *canvas) setSize(w int, h int) {
+func (c *canvas) set_size(w int, h int) {
 	c.element.Set("width", w)
 	c.element.Set("height", h)
 	c.width = w
 	c.height = h
 }
 
-func (c *canvas) setSizeFromDocument() {
+func (c *canvas) set_size_from_document() {
 	c.width = js.Global().Get("window").Get("innerWidth").Int() / int(c.scale)
 	c.height = js.Global().Get("window").Get("innerHeight").Int() / int(c.scale)
 	c.imagedata = c.ctx.Call("createImageData", js.ValueOf(c.width), js.ValueOf(c.height))
@@ -62,10 +62,10 @@ func (c *canvas) setSizeFromDocument() {
 		c.pixels = newpixels
 	}
 	fmt.Printf("Setting canvas size to %d x %d\n", c.width, c.height)
-	c.setSize(c.width, c.height)
+	c.set_size(c.width, c.height)
 }
 
-func (c *canvas) setBackground(p pixel) {
+func (c *canvas) set_background(p pixel) {
 	for i := 0; i < c.height; i++ {
 		for j := 0; j < c.width; j++ {
 			c.pixels[i][j] = p
@@ -75,7 +75,7 @@ func (c *canvas) setBackground(p pixel) {
 
 func (c *canvas) render() {
 	data := make([]uint8, c.width*c.height*4)
-	fmt.Printf("Rendering canvas with width: %d, height: %d, scale: %d\n", c.width, c.height, c.scale)
+	// fmt.Printf("Rendering canvas with width: %d, height: %d, scale: %d\n", c.width, c.height, c.scale)
 	// loop over width and height pixels and add them to the imagedata array
 	totalPixels := c.width * c.height
 	for i := 0; i < totalPixels; i++ {
@@ -90,7 +90,7 @@ func (c *canvas) render() {
 }
 
 // takes a number from 0 to 1 and maps it to the width of the canvas
-func (c *canvas) mapWidth(x float64) int {
+func (c *canvas) map_width(x float64) int {
 	if x < 0 {
 		x = 0
 	}
@@ -108,7 +108,7 @@ func (c *canvas) mapWidth(x float64) int {
 }
 
 // takes a number from 0 to 1 and maps it to the height of the canvas
-func (c *canvas) mapHeight(y float64) int {
+func (c *canvas) map_height(y float64) int {
 	if y < 0 {
 		y = 0
 	}

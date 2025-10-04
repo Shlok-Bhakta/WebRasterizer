@@ -47,10 +47,17 @@ func (m *matrix4x4) inverse() matrix4x4 {
 }
 
 // sets the position of the matrix to the given point
-func (m *matrix4x4) translate(p *point3d) {
+func (m *matrix4x4) set_position(p *point3d) {
 	m[0][3] = p.x
 	m[1][3] = p.y
 	m[2][3] = p.z
+}
+
+// sets the position of the matrix to the given point
+func (m *matrix4x4) translate(p *point3d) {
+	m[0][3] += p.x
+	m[1][3] += p.y
+	m[2][3] += p.z
 }
 
 func identity() matrix4x4 {

@@ -3,7 +3,10 @@
 
 package main
 
-import "errors"
+import (
+	"errors"
+	"math"
+)
 
 type camera struct {
 	transform matrix4x4 // Camera location in world
@@ -23,6 +26,14 @@ func (c *camera) project_point(p point3d, canvas *canvas) (screen_point, error) 
 	screen_y := (camera_space.y/camera_space.z)*c.fov + float64(canvas.height)/2
 
 	return screen_point{x: int(screen_x), y: int(screen_y)}, nil
+}
+
+func (c *camera) set_fov(f float64) {
+	c.fov = (math.Pi / 180.0) * f
+}
+
+func (c *camera) set_transform(m matrix4x4) {
+	c.transform = m
 }
 
 func (c *camera) get_view_matrix() matrix4x4 {

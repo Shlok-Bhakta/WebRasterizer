@@ -18,17 +18,17 @@ func (t *triangle) draw(canvasdata *canvas, cam *camera) {
 	project_1, err := cam.project_point(t.points[0], canvasdata)
 	if err != nil {
 		fmt.Printf("Error projecting triangle point 1: %v\n", err)
-		return
+		// return
 	}
 	project_2, err := cam.project_point(t.points[1], canvasdata)
 	if err != nil {
 		fmt.Printf("Error projecting triangle point 2: %v\n", err)
-		return
+		// return
 	}
 	project_3, err := cam.project_point(t.points[2], canvasdata)
 	if err != nil {
 		fmt.Printf("Error projecting triangle point 3: %v\n", err)
-		return
+		// return
 	}
 
 	screen_triangle := screen_triangle{
