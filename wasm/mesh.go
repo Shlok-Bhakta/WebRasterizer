@@ -98,6 +98,8 @@ func enqueue(point_queue []point3d, point point3d) []point3d {
 		return point_queue
 	}
 	point_queue = append(point_queue, point)
+	fmt.Println(point_queue)
+	fmt.Println(point)
 	return point_queue
 }
 
@@ -118,8 +120,14 @@ func parse_obj() mesh {
 		// For each of the point_indexes arrays I think we can run the triangulation on them
 		for _, face := range point_indexes {
 			for _, point := range face {
+				// queue up the next point
+				positions[point].z *= WORLD_SCALE
+				positions[point].x *= WORLD_SCALE
+				positions[point].y *= WORLD_SCALE
+				point_queue = enqueue(point_queue, positions[point])
 				// check if deque has 3 points
 				if len(point_queue) == 3 {
+					fmt.Println("yay ok so now we make tri!")
 					// make a triangle with the points
 					triangle := triangle{
 						points: [3]point3d{
@@ -129,13 +137,10 @@ func parse_obj() mesh {
 						},
 						color: make_random_pixel(),
 					}
+					fmt.Println(triangle)
 					mesh_data.triangles = append(mesh_data.triangles, triangle)
 				}
-				// queue up the next point
-				positions[point].z *= WORLD_SCALE
-				positions[point].x *= WORLD_SCALE
-				positions[point].y *= WORLD_SCALE
-				point_queue = enqueue(point_queue, positions[point])
+
 				// fmt.Printf("Enqueuing point: %v\n", positions[point])
 			}
 			// flush the queue so it is empty after the face has been triangulated

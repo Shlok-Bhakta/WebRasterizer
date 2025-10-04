@@ -62,11 +62,13 @@ func cube() {
 	for {
 		canvasdata.set_background(pixel{red: 255, green: 255, blue: 200})
 		mesh_data.draw(&canvasdata, &cam)
+		// cent := mesh_data.get_center()
+		// mesh_data.transform(0.30, 10, 0.60, &cent)
 		// cam.set_fov(i)
 		// i += 10
 		// cam_transform_matrix.translate(&runtime_translation)
 		// cam.set_transform(cam_transform_matrix)
-		fmt.Println(cam.transform)
+		// fmt.Println(cam.transform)
 		// triangle.draw(&canvasdata, &cam)
 		// Rotate the mesh around its center
 		// center := mesh_data.get_center()
