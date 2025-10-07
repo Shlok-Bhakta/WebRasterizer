@@ -40,7 +40,7 @@ func cube() {
 	canvasdata := canvas{}
 	canvasdata.init()
 	cam_transform_matrix := identity()
-	translation := point3d{x: 0, y: 0, z: -2}
+	translation := point3d{x: 0, y: 0, z: -10}
 	// runtime_translation := point3d{x: 0, y: 0, z: 0.01}
 	cam_transform_matrix.set_position(&translation)
 	cam := camera{}

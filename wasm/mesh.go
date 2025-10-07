@@ -56,7 +56,7 @@ func extract_positions(obj_data string) []point3d {
 				fmt.Printf("Error parsing z line %s: %v\n", line, err)
 				continue
 			}
-			positions = append(positions, point3d{x: x, y: y, z: z})
+			positions = append(positions, point3d{x: x * WORLD_SCALE, y: y * WORLD_SCALE, z: z * WORLD_SCALE})
 		}
 	}
 	return positions
@@ -121,9 +121,6 @@ func parse_obj() mesh {
 		for _, face := range point_indexes {
 			for _, point := range face {
 				// queue up the next point
-				positions[point].z *= WORLD_SCALE
-				positions[point].x *= WORLD_SCALE
-				positions[point].y *= WORLD_SCALE
 				point_queue = enqueue(point_queue, positions[point])
 				// check if deque has 3 points
 				if len(point_queue) == 3 {
