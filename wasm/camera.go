@@ -24,8 +24,9 @@ func (c *camera) project_point(p point3d, canvas *canvas) (screen_point, error) 
 	}
 	screen_x := (camera_space.x/camera_space.z)*c.fov + float64(canvas.width)/2
 	screen_y := (camera_space.y/camera_space.z)*c.fov + float64(canvas.height)/2
+	screen_z := camera_space.z
 
-	return screen_point{x: int(screen_x), y: int(screen_y)}, nil
+	return screen_point{x: int(screen_x), y: int(screen_y), z: screen_z}, nil
 }
 
 func (c *camera) set_fov(f float64) {

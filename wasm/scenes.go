@@ -71,9 +71,9 @@ func cube() {
 		// fmt.Println(cam.transform)
 		// triangle.draw(&canvasdata, &cam)
 		// Rotate the mesh around its center
-		// center := mesh_data.get_center()
+		center := mesh_data.get_center()
 		// fmt.Printf("Center of mesh: %v\n", center)
-		// mesh_data.transform(0.01, 0.01, 0.01, &center)
+		mesh_data.transform(0.01, 0.01, 0.01, &center)
 		// Render the canvas
 		canvasdata.render()
 		time.Sleep(100 * time.Millisecond)

@@ -15,6 +15,7 @@ type point3d struct {
 
 type screen_point struct {
 	x, y int
+	z    float64 // Need this bad boi for z buffering
 }
 
 func (p *point3d) distance(other point3d) float64 {

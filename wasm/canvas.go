@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"syscall/js"
 )
 
@@ -13,6 +14,7 @@ type canvas struct {
 	height    int
 	scale     uint8
 	pixels    [][]pixel
+	zbuffer   [][]float64
 	imagedata js.Value
 	ctx       js.Value
 	element   js.Value
@@ -46,20 +48,32 @@ func (c *canvas) set_size_from_document() {
 	c.imagedata = c.ctx.Call("createImageData", js.ValueOf(c.width), js.ValueOf(c.height))
 	if c.pixels == nil {
 		c.pixels = make([][]pixel, c.height)
+		c.zbuffer = make([][]float64, c.height)
 		for i := range c.pixels {
 			c.pixels[i] = make([]pixel, c.width)
+			c.zbuffer[i] = make([]float64, c.width)
+		}
+		for i := range c.pixels {
+			for j := range c.pixels[i] {
+				c.pixels[i][j] = pixel{red: 255, green: 0, blue: 255} // ugly pink
+				c.zbuffer[i][j] = math.Inf(1)                         // farthest depth
+			}
 		}
 	} else {
 		newpixels := make([][]pixel, c.height)
+		newzbuffer := make([][]float64, c.height)
 		for i := range newpixels {
 			newpixels[i] = make([]pixel, c.width)
+			newzbuffer[i] = make([]float64, c.width)
 		}
 		for i := 0; i < c.height; i++ {
 			for j := 0; j < c.width; j++ {
 				newpixels[i][j] = c.pixels[i][j]
+				newzbuffer[i][j] = c.zbuffer[i][j]
 			}
 		}
 		c.pixels = newpixels
+		c.zbuffer = newzbuffer
 	}
 	fmt.Printf("Setting canvas size to %d x %d\n", c.width, c.height)
 	c.set_size(c.width, c.height)
@@ -69,6 +83,7 @@ func (c *canvas) set_background(p pixel) {
 	for i := 0; i < c.height; i++ {
 		for j := 0; j < c.width; j++ {
 			c.pixels[i][j] = p
+			c.zbuffer[i][j] = math.Inf(1)
 		}
 	}
 }
