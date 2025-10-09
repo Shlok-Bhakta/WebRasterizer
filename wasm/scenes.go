@@ -76,6 +76,6 @@ func cube() {
 		mesh_data.transform(0.01, 0.01, 0.01, &center)
 		// Render the canvas
 		canvasdata.render()
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 	}
 }

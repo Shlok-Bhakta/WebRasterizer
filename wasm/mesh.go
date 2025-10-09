@@ -197,21 +197,24 @@ func (m *mesh) transform(roll float64, pitch float64, yaw float64, pivot *point3
 
 	// apply the transformation matrix to the triangle points with pivot
 	for i := range m.triangles {
-		// Translate to origin (subtract pivot)
-		translated := point3d{
-			x: m.triangles[i].points[0].x - pivot.x,
-			y: m.triangles[i].points[0].y - pivot.y,
-			z: m.triangles[i].points[0].z - pivot.z,
-		}
-
-		// Apply rotation
-		rotated := translated.transform(&matrix)
-
-		// Translate back (add pivot)
-		m.triangles[i].points[0] = point3d{
-			x: rotated.x + pivot.x,
-			y: rotated.y + pivot.y,
-			z: rotated.z + pivot.z,
+		for j := range m.triangles[i].points {
+			// Translate to origin (subtract pivot)
+			translated := point3d{
+				x: m.triangles[i].points[j].x - pivot.x,
+				y: m.triangles[i].points[j].y - pivot.y,
+				z: m.triangles[i].points[j].z - pivot.z,
+			}
+			
+			
+			// Apply rotation
+			rotated := translated.transform(&matrix)
+			
+			// Translate back (add pivot)
+			m.triangles[i].points[j] = point3d{
+				x: rotated.x + pivot.x,
+				y: rotated.y + pivot.y,
+				z: rotated.z + pivot.z,
+			}
 		}
 	}
 }
