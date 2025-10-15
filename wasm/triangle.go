@@ -61,7 +61,8 @@ func (t *triangle) draw(canvasdata *canvas, cam *camera) {
 			p := screen_point{x: x, y: y}
 			z_depth := screen_triangle.is_inside(p)
 			if z_depth > 0 && z_depth < canvasdata.zbuffer[p.y][p.x] {
-				canvasdata.pixels[p.y][p.x] = screen_triangle.color
+				// canvasdata.pixels[p.y][p.x] = screen_triangle.color
+				canvasdata.pixels[p.y][p.x] = screen_triangle.gradient_debug_color(p)
 				canvasdata.zbuffer[p.y][p.x] = z_depth
 			}
 		}

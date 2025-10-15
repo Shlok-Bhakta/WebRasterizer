@@ -6,8 +6,10 @@ package main
 import (
 	"errors"
 	"math"
+	"syscall/js"
+	"fmt"
 )
-
+const SPEED = 0.2
 type camera struct {
 	transform matrix4x4 // Camera location in world
 	fov       float64   // Field of view in radians
@@ -39,4 +41,9 @@ func (c *camera) set_transform(m matrix4x4) {
 
 func (c *camera) get_view_matrix() matrix4x4 {
 	return c.transform.inverse()
+}
+
+func (c *camera) js_transform()  {
+	inputstate := js.Global().Get("window").Get("inputState")
+	fmt.Println(inputstate)
 }

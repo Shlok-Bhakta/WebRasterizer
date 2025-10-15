@@ -65,6 +65,24 @@
         intervalId = setInterval(checkForReload, 1000)
         console.log("hot reload enabled")
 
+
+        // implement a way to get mouse info into wasm
+        window.inputState = {
+            keys: {},
+            mouseX: 0,
+            mouseY: 0,
+            mouseDeltaX: 0,
+            mouseDeltaY: 0,
+        }
+
+        window.addEventListener("keydown", e => {
+            window.inputState.keys[e.key] = true;
+        });
+        
+        window.addEventListener("keyup", e => {
+            window.inputState.keys[e.key] = false;
+        });
+
     </script>
     <canvas id="canvas"></canvas>
 </body>

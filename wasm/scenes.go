@@ -60,6 +60,7 @@ func cube() {
 	// }
 	// var i float64 = 600
 	for {
+		cam.js_transform()
 		canvasdata.set_background(pixel{red: 255, green: 255, blue: 200})
 		mesh_data.draw(&canvasdata, &cam)
 		// cent := mesh_data.get_center()
