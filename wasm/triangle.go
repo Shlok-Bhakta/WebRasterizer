@@ -68,6 +68,31 @@ func (t *triangle) draw(canvasdata *canvas, cam *camera) {
 	}
 }
 
+// checks if a given point falls inside the screen_triangle and also returns the z depth
+func (t *screen_triangle) gradient_debug_color(p screen_point) pixel {
+	big_triangle_area := t.area()
+	// find the area of all 3 triangles formed by the point and the triangle vertices
+	t1 := screen_triangle{points: [3]screen_point{t.points[0], t.points[1], p}, color: t.color}
+	t2 := screen_triangle{points: [3]screen_point{t.points[1], t.points[2], p}, color: t.color}
+	t3 := screen_triangle{points: [3]screen_point{t.points[2], t.points[0], p}, color: t.color}
+	a1 := t1.area()
+	a2 := t2.area()
+	a3 := t3.area()
+	// check to see if a1 + a2 + a3 == big_triangle_area
+	if a1+a2+a3-big_triangle_area > 0.0001 {
+		return pixel{0, 0, 0}
+	} else {
+		w1 := a2 / big_triangle_area
+		w2 := a3 / big_triangle_area
+		w3 := a1 / big_triangle_area
+		sum := w1 + w2 + w3
+		w1 /= sum
+		w2 /= sum
+		w3 /= sum
+		return pixel{uint8(w1 * 255), uint8(w2 * 255), uint8(w3 * 255)}
+	}
+}
+
 // roll rotates the triangle around a pivot point
 func (t *triangle) transform(roll float64, pitch float64, yaw float64, pivot *point3d) {
 	// construct a transformation matrix for the roll, pitch, and yaw
