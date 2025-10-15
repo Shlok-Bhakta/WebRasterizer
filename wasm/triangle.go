@@ -141,7 +141,7 @@ func (t *screen_triangle) is_inside(p screen_point) float64 {
 	a2 := t2.area()
 	a3 := t3.area()
 	// check to see if a1 + a2 + a3 == big_triangle_area
-	if a1+a2+a3-big_triangle_area > 0.1 {
+	if a1+a2+a3-big_triangle_area > 0.001 {
 		return -1
 	} else {
 		w1 := a2 / big_triangle_area
@@ -154,7 +154,7 @@ func (t *screen_triangle) is_inside(p screen_point) float64 {
 func (t *screen_triangle) area() float64 {
 	// using the shoelace formula
 	d1 := t.points[0].x*t.points[1].y - t.points[1].x*t.points[0].y
-	d2 := t.points[1].x*t.points[2].y - t.points[2].x*t.points[1].y
+	d2 := t.points[1].x*t.points[2].y - t.points[2].x *t.points[1].y
 	d3 := t.points[2].x*t.points[0].y - t.points[0].x*t.points[2].y
-	return math.Abs(float64((d1 + d2 + d3) / 2))
+	return math.Abs(float64((d1 + d2 + d3) / 3))
 }

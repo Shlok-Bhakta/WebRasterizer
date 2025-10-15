@@ -45,7 +45,7 @@ func cube() {
 	cam_transform_matrix.set_position(&translation)
 	cam := camera{}
 	cam.set_transform(cam_transform_matrix)
-	cam.set_fov(20000)
+	cam.set_fov(9000)
 	// Load the cube from OBJ file
 	mesh_data := parse_obj()
 	fmt.Printf("Loaded mesh with %d triangles & mesh data %v\n", len(mesh_data.triangles), mesh_data)

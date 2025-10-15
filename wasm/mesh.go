@@ -114,6 +114,11 @@ func parse_obj() mesh {
 	// Support multiple objects :tada:
 	for _, object := range objects {
 		positions := extract_positions(object)
+		for i := range positions {
+			positions[i].z *= WORLD_SCALE
+			positions[i].x *= WORLD_SCALE
+			positions[i].y *= WORLD_SCALE
+		}
 		fmt.Printf("Loaded %d positions: %v\n", len(positions), positions)
 		point_indexes := extract_point_indexes(object)
 		fmt.Printf("Loaded %d point indexes: %v\n", len(point_indexes), point_indexes)
