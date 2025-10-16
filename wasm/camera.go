@@ -9,7 +9,7 @@ import (
 	"syscall/js"
 	"fmt"
 )
-const SPEED = 0.2
+const SPEED float64 = 0.2
 type camera struct {
 	transform matrix4x4 // Camera location in world
 	fov       float64   // Field of view in radians
@@ -43,7 +43,45 @@ func (c *camera) get_view_matrix() matrix4x4 {
 	return c.transform.inverse()
 }
 
+type InputState struct {
+	W int
+	A int
+	S int
+	D int
+	SPACE int
+	SHIFT int
+	mouseX int
+	mouseY int
+	mouseDeltaX int
+	mouseDeltaY int
+}
+
+func bool_to_int(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
+
 func (c *camera) js_transform()  {
-	inputstate := js.Global().Get("window").Get("inputState")
-	fmt.Println(inputstate)
+	jsinputstate := js.Global().Get("window").Get("inputState")
+	inputState := InputState{
+		W: bool_to_int(jsinputstate.Get("W").Bool()),
+		A: bool_to_int(jsinputstate.Get("A").Bool()),
+		S: bool_to_int(jsinputstate.Get("S").Bool()),
+		D: bool_to_int(jsinputstate.Get("D").Bool()),
+		SPACE: bool_to_int(jsinputstate.Get("SPACE").Bool()),
+		SHIFT: bool_to_int(jsinputstate.Get("SHIFT").Bool()),
+		mouseX: jsinputstate.Get("mouseX").Int(),
+		mouseY: jsinputstate.Get("mouseY").Int(),
+		mouseDeltaX: jsinputstate.Get("mouseDeltaX").Int(),
+		mouseDeltaY: jsinputstate.Get("mouseDeltaY").Int(),
+	}
+	p := point3d{
+		x: float64(inputState.D - inputState.A) * SPEED , 
+		y: float64(inputState.SHIFT - inputState.SPACE) * SPEED , 
+		z: float64(inputState.W - inputState.S) * SPEED}
+	c.transform.translate(&p)
+
+	fmt.Println(inputState)
 }

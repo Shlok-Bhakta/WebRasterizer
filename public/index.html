@@ -68,7 +68,12 @@
 
         // implement a way to get mouse info into wasm
         window.inputState = {
-            keys: {},
+            W: false,
+            A: false,
+            S: false,
+            D: false,
+            SPACE: false,
+            SHIFT: false,
             mouseX: 0,
             mouseY: 0,
             mouseDeltaX: 0,
@@ -76,12 +81,54 @@
         }
 
         window.addEventListener("keydown", e => {
-            window.inputState.keys[e.key] = true;
+            if (e.key.toLowerCase() == "w") {
+                window.inputState.W = true;
+            }
+            if (e.key.toLowerCase() == "a") {
+                window.inputState.A = true;
+            }
+            if (e.key.toLowerCase() == "s") {
+                window.inputState.S = true;
+            }
+            if (e.key.toLowerCase() == "d") {
+                window.inputState.D = true;
+            }
+            if (e.key.toLowerCase() == " ") {
+                window.inputState.SPACE = true;
+            }
+            if (e.key.toLowerCase() == "shift") {
+                window.inputState.SHIFT = true;
+            }
         });
         
         window.addEventListener("keyup", e => {
-            window.inputState.keys[e.key] = false;
+            if (e.key.toLowerCase() == "w") {
+                window.inputState.W = false;
+            }
+            if (e.key.toLowerCase() == "a") {
+                window.inputState.A = false;
+            }
+            if (e.key.toLowerCase() == "s") {
+                window.inputState.S = false;
+            }
+            if (e.key.toLowerCase() == "d") {
+                window.inputState.D = false;
+            }
+            if (e.key.toLowerCase() == " ") {
+                window.inputState.SPACE = false;
+            }
+            if (e.key.toLowerCase() == "shift") {
+                window.inputState.SHIFT = false;
+            }
         });
+
+        window.addEventListener("mousemove", e => {
+            window.inputState.mouseDeltaX = e.movementX;
+            window.inputState.mouseDeltaY = e.movementY;
+            window.inputState.mouseX = e.clientX;
+            window.inputState.mouseY = e.clientY;
+        });
+        setInterval(() => {console.log(window.inputState)}, 1000)
 
     </script>
     <canvas id="canvas"></canvas>
