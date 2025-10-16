@@ -5,7 +5,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 	"syscall/js"
@@ -177,28 +176,7 @@ func (m *mesh) get_center() point3d {
 
 func (m *mesh) transform(roll float64, pitch float64, yaw float64, pivot *point3d) {
 	// construct a transformation matrix for the roll, pitch, and yaw
-	roll_matrix := matrix4x4{
-		{1, 0, 0, 0},
-		{0, math.Cos(roll), -math.Sin(roll), 0},
-		{0, math.Sin(roll), math.Cos(roll), 0},
-		{0, 0, 0, 1},
-	}
-	pitch_matrix := matrix4x4{
-		{math.Cos(pitch), 0, -math.Sin(pitch), 0},
-		{0, 1, 0, 0},
-		{math.Sin(pitch), 0, math.Cos(pitch), 0},
-		{0, 0, 0, 1},
-	}
-	yaw_matrix := matrix4x4{
-		{math.Cos(yaw), -math.Sin(yaw), 0, 0},
-		{math.Sin(yaw), math.Cos(yaw), 0, 0},
-		{0, 0, 1, 0},
-		{0, 0, 0, 1},
-	}
-
-	// multiply the transformation matrices together
-	matrix := yaw_matrix.multiply(&pitch_matrix)
-	matrix = matrix.multiply(&roll_matrix)
+	matrix := make_rotation_matrix(roll, pitch, yaw)
 
 	// apply the transformation matrix to the triangle points with pivot
 	for i := range m.triangles {

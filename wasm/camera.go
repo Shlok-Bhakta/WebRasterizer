@@ -10,6 +10,7 @@ import (
 	"fmt"
 )
 const SPEED float64 = 0.2
+const CAMERA_ROTATION_SPEED float64 = 0.002
 type camera struct {
 	transform matrix4x4 // Camera location in world
 	fov       float64   // Field of view in radians
@@ -82,6 +83,10 @@ func (c *camera) js_transform()  {
 		y: float64(inputState.SHIFT - inputState.SPACE) * SPEED , 
 		z: float64(inputState.W - inputState.S) * SPEED}
 	c.transform.translate(&p)
+	yaw := float64(-inputState.mouseDeltaY) * CAMERA_ROTATION_SPEED
+	pitch := float64(-inputState.mouseDeltaX) * CAMERA_ROTATION_SPEED
+	c.transform.rotate(yaw, pitch, 0)
+
 
 	fmt.Println(inputState)
 }

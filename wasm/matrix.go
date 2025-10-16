@@ -3,7 +3,7 @@
 
 package main
 
-// import "math"
+import "math"
 
 type matrix4x4 [4][4]float64
 
@@ -77,6 +77,15 @@ func (m *matrix4x4) translate(p *point3d) {
 	m[2][3] += p.z
 }
 
+func (m *matrix4x4) rotate(roll float64, pitch float64, yaw float64) {
+	rotation := make_rotation_matrix(roll, pitch, yaw)
+	position := point3d{x: m[0][3], y: m[1][3], z: m[2][3]}
+	*m = rotation.multiply(m)
+	m[0][3] = position.x
+	m[1][3] = position.y
+	m[2][3] = position.z
+}
+
 func identity() matrix4x4 {
 	return matrix4x4{
 		{1, 0, 0, 0},
@@ -85,3 +94,27 @@ func identity() matrix4x4 {
 		{0, 0, 0, 1},
 	}
 }
+
+func make_rotation_matrix(roll float64, pitch float64, yaw float64) matrix4x4 {
+	roll_matrix := matrix4x4{
+		{1, 0, 0, 0},
+		{0, math.Cos(roll), -math.Sin(roll), 0},
+		{0, math.Sin(roll), math.Cos(roll), 0},
+		{0, 0, 0, 1},
+	}
+	pitch_matrix := matrix4x4{
+		{math.Cos(pitch), 0, -math.Sin(pitch), 0},
+		{0, 1, 0, 0},
+		{math.Sin(pitch), 0, math.Cos(pitch), 0},
+		{0, 0, 0, 1},
+	}
+	yaw_matrix := matrix4x4{
+		{math.Cos(yaw), -math.Sin(yaw), 0, 0},
+		{math.Sin(yaw), math.Cos(yaw), 0, 0},
+		{0, 0, 1, 0},
+		{0, 0, 0, 1},
+	}
+	ry := yaw_matrix.multiply(&pitch_matrix)
+	return ry.multiply(&roll_matrix)
+}
+
